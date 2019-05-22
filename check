@@ -1,6 +1,9 @@
 #! /bin/sh
-source file-check.conf
+echo "What is your url for sonarr?"
+read sonarrurl
 
+echo "What's your API Key?"
+read sonarrapi
 
 echo What directory would you like to check?
 read dir
@@ -16,8 +19,8 @@ cd $dir
 
 find . -ctime -$days -type f -iname "*.mkv" ! -iname "*.mp4" ! -iname "*.mov" -exec  checkfile.py \{\} \; > /var/log/$dir.log
 
-curl -d '{name: "RefreshSeries"}' -H "Content-Type: application/json" -X POST $sonarrurl/sonarr/api/command?apikey=$sonarrapi
+curl -d '{name: "RefreshSeries"}' -H "Content-Type: application/json" -X POST $sonarrurl/api/command?apikey=$sonarrapi
 wait 10
-curl -d '{name: "missingEpisodeSearch"}' -H "Content-Type: application/json" -X POST $sonarrurl/sonarr/api/command?apikey=$sonarrapi
+curl -d '{name: "missingEpisodeSearch"}' -H "Content-Type: application/json" -X POST $sonarrurl/api/command?apikey=$sonarrapi
 
 echo $dir have finished. View the log at /var/log/plex-file-check/$dir.log
