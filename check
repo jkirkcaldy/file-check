@@ -9,7 +9,7 @@ radarrapi="radarrapi"
 
 echo What directory would you like to check?
 read dir
-ln -s $dir ./tmp 
+ln -s $dir ~/tmp
 
 echo "How long far back do you want to go (in days)"
 
@@ -18,9 +18,9 @@ read days
 echo Starting now. If there have been many files added, this may take a long time!
 
 
-cd ./tmp
+cd tmp
 
-find . -ctime -$days -type f -iname "*.mkv" ! -iname "*.mp4" ! -iname "*.mov" -exec  checkfile.py \{\} \; > /var/log/file-check.log
+find . -ctime -$days -type f -iname "*.mkv" ! -iname "*.mp4" ! -iname "*.mov" -exec  ~/file-check/checkfile.py \{\} \; > /var/log/file-check.log
 
 curl -d '{name: "RefreshSeries"}' -H "Content-Type: application/json" -X POST $sonarrurl/api/command?apikey=$sonarrapi
 sleep 5
@@ -29,8 +29,9 @@ sleep 5
 curl -d '{name: "RescanMovie"}' -H "Content-Type: application/json" -X POST $radarrurl/api/command?apikey=$radarrapi
 sleep 5
 curl -d '{name: "missingMovieSearch"}' -H "Content-Type: application/json" -X POST $radarrurl/api/command?apikey=$radarrapi
+
 rm -R tmp
 
-echo $dir have finished. View the log at /var/log/plex-file-check/$dir.log
+echo $dir have finished. View the log at /var/log/plex-file-check/file-check.log
 
 
